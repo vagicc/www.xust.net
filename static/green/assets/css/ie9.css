@@ -1,0 +1,33 @@
+/*
+	Landed by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+*/
+
+/* Loader */
+
+	body.landing:before, body.landing:after {
+		display: none !important;
+	}
+
+/* Icon */
+
+	.icon.alt {
+		color: inherit !important;
+	}
+
+	.icon.major.alt:before {
+		color: #97b15e !important;
+	}
+
+/* Banner */
+
+	#banner:after {
+		background-color: rgba(5,28,0, 0.95);
+	}
+
+/* Footer */
+
+	#footer .icons .icon.alt:before {
+		color: #97b15e !important;
+	}

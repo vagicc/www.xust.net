@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	{{#if seo_title}}
+	<title>{{seo_title}}</title>
+	{{~^~}}
+	<title>技术派（elapse date）</title>
+	{{~/if~}}
+
+	{{#if seo_keyword}}
+	<meta name="keyword" content="{{seo_keyword}}">
+	{{~^~}}
+	<meta name="keyword" content="rust;warp;">
+	{{~/if~}}
+
+	{{#if seo_description}}
+	<meta name="description" content="{{seo_description}}">
+	{{~^~}}
+	<meta name="description" content="技术派">
+	{{~/if~}}
+	 
+	<meta charset="utf-8" />
+	<base href="{{base_url}}static/green/" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+
+<body>
+
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1 id="logo"><a href="{{base_url}}">Elapse.date 【消逝年華】</a></h1>
+			<!-- <h1 id="logo"><a href="javascript:void(0)">流逝年华 【Elapse.date】</a></h1> -->
+			<nav id="nav">
+				<ul>
+					<li><a href="{{base_url}}">Home</a></li>
+					<!-- <li>
+						<a href="javascript:;">服务器</a>
+						<ul>
+							<li><a href="javascript:;">Windows</a></li>
+							<li>
+								<a href="<?= site_url('article/index') ?>">Linux</a>
+								<ul>
+									<li><a href="javascript:;">Debian</a></li>
+									<li><a href="javascript:;">Ubuntu</a></li>
+									<li><a href="javascript:;">CentOS</a></li>
+									<li><a href="javascript:;">Warp</a></li>
+								</ul>
+							</li>
+						</ul>
+					</li> -->
+					<li><a href="javascript:;">时事新闻</a></li>
+
+					<li><a href="{{base_url}}article/index" class="button">技术文章</a></li>
+					<!-- <li><a href="javascript:;">登錄/注册</a></li> -->
+				</ul>
+			</nav>
+		</header>
+
+		<!-- 主体内容 start -->
+		{{> child}}
+		<!-- 主体内容 end -->
+
+		<!-- Footer -->
+		<footer id="footer">
+			<ul class="icons">
+				<li><a href="//google.elapse.date/" target="_blank" class="icon alt fa-google"><span
+							class="label">旺财搜索</span></a></li>
+				<li><a href="https://www.rust-lang.org/" target="_blank" class="icon alt fa-registered"><span
+							class="label">Rust</span></a></li>
+				<li><a href="https://github.com/" target="_blank" class="icon alt fa-github"><span
+							class="label">GitHub</span></a></li>
+				<li><a href="https://www.google.com/" target="_blank" class="icon alt fa-google"><span
+							class="label">google</span></a></li>
+				<li><a href="http://www.postgres.cn/" target="_blank" class="icon alt fa-paypal"><span
+							class="label">postgres</span></a></li>
+				<li><a href="//gwmc.site" target="_blank" class="icon alt fa-car"><span class="label">跟我买车</span></a>
+				</li>
+			</ul>
+			<ul class="copyright">
+				<li>&copy; 版权ss所有: 随X记 </li>
+				<li>技术支持: <a href="http://elapse.date">临来笑笑生</a></li>
+			</ul>
+		</footer>
+
+	</div>
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/jquery.dropotron.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="assets/js/main.js"></script>
+
+	<!-- Matomo -->
+	<script>
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function() {
+		var u="//matomo.elapse.date/";
+		_paq.push(['setTrackerUrl', u+'matomo.php']);
+		_paq.push(['setSiteId', '1']);
+		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+		g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+		})();
+	</script>
+	<!-- End Matomo Code -->
+  
+</body>
+
+</html>

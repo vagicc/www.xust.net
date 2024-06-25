@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>技术学习页（Learn）</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1 id="logo"><a href="index.html">Technology Party => 技术派</a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li>
+								<a href="#">服务器</a>
+								<ul>
+									<li><a href="left-sidebar.html">Windows</a></li>
+									<li>
+										<a href="#">Linux</a>
+										<ul>
+											<li><a href="#">Debian</a></li>
+											<li><a href="#">Ubuntu</a></li>
+											<li><a href="#">CentOS</a></li>
+										</ul>
+									</li>
+								</ul> 
+							</li>
+							<li><a href="#" class="button special">Linux</a></li>
+							<li><a href="#">PHP</a></li>
+							<li><a href="#" >登录</a></li>
+						</ul>
+					</nav>
+				</header>
+
+			<!-- Main -->
+				<div id="main" class="wrapper style1">
+					<div class="container">
+						<header class="major">
+							<h2>Linux VPS初始化配置</h2>
+							<p>拿到一台新的Linux服务器，我们应该怎么做呢？立马安装LANP或LNMP，服务器管理初始化有门道…</p>
+						</header>
+						<!-- Content -->
+							<section id="content">
+								
+									<h5>一、检查硬件及系统</h5>
+										<ol>
+											<li>查看VPS虚拟架构：</li>
+											<pre><code>
+root@elapse.date:~# dmidecode -t 1
+# dmidecode 2.12
+SMBIOS 2.4 present.
+
+Handle 0x0100, DMI type 1, 27 bytes
+System Information
+		Manufacturer: Red Hat
+		Product Name: KVM
+		Version: RHEL 6.6.0 PC
+		Serial Number: Not Specified
+		UUID: FA7BF371-7B90-4E7D-9A06-FC98D2FC234F
+		Wake-up Type: Power Switch
+		SKU Number: Not Specified
+		Family: Red Hat Enterprise Linux
+root@elapse.date:~# 这一台是KVM架构的VPS，还有QEMU、Xen、VMware
+root@elapse.date:~# 相对来说KVM是比较贵的,也比较稀少
+
+root@www.xdiary.win:~# dmidecode -t 1
+# dmidecode 2.12
+SMBIOS 2.8 present.
+
+Handle 0x0100, DMI type 1, 27 bytes
+System Information
+        Manufacturer: QEMU
+        Product Name: Standard PC (i440FX + PIIX, 1996)
+        Version: pc-i440fx-2.1
+        Serial Number: 1ecccaa5-3bc5-40cd-b0a5-0066e4de084a
+        UUID: 1ECCCAA5-3BC5-40CD-B0A5-0066E4DE084A
+        Wake-up Type: Power Switch
+        SKU Number: Not Specified
+        Family: Not Specified
+
+											</code></pre>
+											<li>查看系统版本：</li> 
+											<pre><code>
+root@www.xdiary.win:~# cat /etc/issue
+Debian GNU/Linux 8 \n \l
+root@www.xdiary.win:~# lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU/Linux 8.6 (jessie)
+Release:        8.6
+Codename:       jessie
+root@hotf.net:~# cat /etc/os-release 
+PRETTY_NAME="Debian GNU/Linux 9 (stretch)"
+NAME="Debian GNU/Linux"
+VERSION_ID="9"
+VERSION="9 (stretch)"
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+root@hotf.net:~# cat /proc/version 
+Linux version 4.9.0-3-amd64 (debian-kernel@lists.debian.org) (gcc version 6.3.0 20170516 (Debian 6.3.0-18) ) #1 SMP Debian 4.9.30-2+deb9u2 (2017-06-26)
+root@Toka:~# uname -a
+Linux Toka 4.9.0-3-amd64 #1 SMP Debian 4.9.30-2+deb9u2 (2017-06-26) x86_64 GNU/Linux
+
+
+											</code></pre>
+											<li>查看是否为64位系统：</li>
+											<pre><code>
+[root@www.xdiary.win(CentOS):~#] file /sbin/init
+/sbin/init: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.18, stripped
+root@www.xdiary.win(Debian):~# file /lib/systemd/systemd
+/lib/systemd/systemd: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=9c328d5dd958a001ea35a2bd711ff5ec2b648a21, stripped
+root@www.xdiary.win(Debian):~# Debian系列与CentOS系列所执行的命令行并不相同！
+											</code>如果看到有<b>x86-64</b>字样，则是64位Linux操作系统。</pre>
+
+											<li>查看CPU信息：</li>
+											<pre><code>
+root@elapse.date:~# dmidecode -t 4
+# dmidecode 2.12
+SMBIOS 2.4 present.
+
+Handle 0x0401, DMI type 4, 32 bytes
+Processor Information
+        Socket Designation: CPU 1
+        Type: Central Processor
+        Family: Other
+        Manufacturer: Bochs
+        ID: D3 06 00 00 FD FB 8B 07
+        Version: Not Specified
+        Voltage: Unknown
+        External Clock: Unknown
+        Max Speed: 2000 MHz
+        Current Speed: 2000 MHz
+        Status: Populated, Enabled
+        Upgrade: Other
+        L1 Cache Handle: Not Provided
+        L2 Cache Handle: Not Provided
+        L3 Cache Handle: Not Provided
+
+root@www.xdiary.win:~# cat /proc/cpuinfo
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 45
+model name      : Intel(R) Xeon(R) CPU E5-2620 0 @ 2.00GHz
+stepping        : 7
+microcode       : 1796
+cpu MHz         : 1999.996
+cache size      : 15360 KB
+physical id     : 0
+siblings        : 12
+core id         : 0
+cpu cores       : 6
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid xsaveopt
+bogomips        : 3999.99
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 46 bits physical, 48 bits virtual
+power management:
+											</code></pre>
+
+											<li>查看内存信息:</li>
+											<pre>命令 <b>free -m</b> 与 <b>cat /proc/meminfo</b> 都可以查看到内存的信息<code>
+root@elapse.date:~# dmidecode -t 16
+# dmidecode 2.12
+SMBIOS 2.4 present.
+
+Handle 0x1000, DMI type 16, 15 bytes
+Physical Memory Array
+        Location: Other
+        Use: System Memory
+        Error Correction Type: Multi-bit ECC
+        Maximum Capacity: 2 GB
+        Error Information Handle: Not Provided
+        Number Of Devices: 1
+root@www.xdiary.win:~# free -m
+             total       used       free     shared    buffers     cached
+Mem:          1024        252        771         58          0        169
+-/+ buffers/cache:         82        941
+Swap:          512         68        443
+root@www.xdiary.win:~# cat /proc/meminfo
+MemTotal:        1048576 kB
+MemFree:          793792 kB
+Cached:           172064 kB
+Buffers:               0 kB
+Active:            93472 kB
+Inactive:          90004 kB
+Active(anon):      32580 kB
+Inactive(anon):    37488 kB
+Active(file):      60892 kB
+Inactive(file):    52516 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:        524288 kB
+SwapFree:         454312 kB
+Dirty:                24 kB
+Writeback:             0 kB
+AnonPages:         70068 kB
+Shmem:             58656 kB
+Slab:              12640 kB
+SReclaimable:       4748 kB
+SUnreclaim:         7892 kB
+											</code></pre>
+
+											<li>查看磁盘：</li>
+											<pre><code>
+root@www.xdiary.win:~# fdisk -l
+
+Disk /dev/hda: 21.4 GB, 21474836480 bytes
+224 heads, 56 sectors/track, 3343 cylinders
+Units = cylinders of 12544 * 512 = 6422528 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hda1   *           1        3343    20963801   83  Linux
+Partition 1 does not end on cylinder boundary.
+
+Disk /dev/xvdb: 53.6 GB, 53687091200 bytes
+224 heads, 56 sectors/track, 8359 cylinders
+Units = cylinders of 12544 * 512 = 6422528 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+/dev/xvdb1               1        8359    52427620   83  Linux
+
+Disk /dev/xvdd: 536.8 GB, 536870912000 bytes
+224 heads, 56 sectors/track, 83591 cylinders
+Units = cylinders of 12544 * 512 = 6422528 bytes
+
+Disk /dev/xvdd doesn't contain a valid partition table
+root@www.xdiary.win:~# 以上表示本机有hda 21.4GB xvdb 53.6GB xvdd 536.8GB三块硬盘
+											</code></pre>
+
+											<li>查看分区容量情况：</li>
+											<pre><code>
+root@www.xdiary.win:~# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/hda1              20G   12G  6.5G  65% /
+tmpfs                1006M     0 1006M   0% /dev/shm
+/dev/xvdd             493G   83G  385G  18% /web
+root@www.xdiary.win:~# 这里可以看到分区及硬盘挂载情况
+											</code></pre>
+
+											<li>测试VPS主机磁盘IO的性能,也是区分是否为固态硬盘重要依据：</li>
+											<pre><code>
+root@www.xdiary.win:~# dd if=/dev/zero of=test bs=64k count=4k oflag=dsync
+记录了4096+0 的读入
+记录了4096+0 的写出
+268435456字节(268 MB)已复制，10.1718 秒，26.4 MB/秒
+root@www.xdiary.win:~# dd if=/dev/zero of=test bs=8k count=256k conv=fdatasync
+记录了262144+0 的读入
+记录了262144+0 的写出
+2147483648字节(2.1 GB)已复制，16.0234 秒，134 MB/秒
+root@www.xdiary.win:~# 这台固态硬盘，普通硬盘在 10.2 MB/s、44.9 MB/s左右
+											</code></pre>
+										</ol>
+									<h5>二、修改密码及配制密钥登录</h5>
+										<ol>
+											<li>修改密码：passwd</li>
+											<li>配置密钥登录：</li>
+											<pre><code>
+root@www.xdiary.win:~# mkdir ~/.ssh
+root@www.xdiary.win:~# chmod 700 ~/.ssh
+root@www.xdiary.win:~# 把用SecureCRT创建的RSA公钥Identity.pub上传到服务器,再把公钥加入authorized_keys中
+root@www.xdiary.win:~# ssh-keygen -i -f Identity.pub >> ~/.ssh/authorized_keys 
+root@www.xdiary.win:~# chmod 600 ~/.ssh/authorized_keys
+root@www.xdiary.win:~# /etc/init.d/ssh restart
+root@www.xdiary.win:~# 重启SSH,试下用私钥登录(CentOS系列：/etc/init.d/sshd restart)，如还不能成功用私钥登录，请再按以下修改ssh配置
+root@www.xdiary.win:~# vim /etc/ssh/sshd_config
+	TCPKeepAlive yes         #保持连接
+	ClientAliveInterval 60   #每一分问一次客户端在不在
+	ClientAliveCountMax 3    #客户端3次没回应才断开(手动增加)
+	RSAAuthentication yes    #RSA认证
+	PubkeyAuthentication yes  #开启公钥验证
+	#验证文件路径，这个可以不更改它,因为上面用的就是这个目录
+	AuthorizedKeysFile    %h/.ssh/authorized_keys  #公钥存放路径，默认不用修改
+	PasswordAuthentication no   #一定要测试私钥可以登录后才能关闭常规的密码登录,不然将再也远程登录不了
+root@www.xdiary.win:~# /etc/init.d/ssh restart
+											</code></pre>
+										</ol>
+
+									<h5>三、配制bash高亮及当前系统位置提示</h5>
+										<ol>
+											<li>配制高亮bash：</li>
+											<blockquote>
+											  
+											  <pre><code>
+root@www.xdiary.win:~# vim ~/.bashrc
+	###使以下几行生效,去掉以下几行头部“#”就可以了###
+	export LS_OPTIONS=\"--color=auto\"
+	eval "`dircolors`"
+	alias ls=\"ls $LS_OPTIONS\"
+	alias ll=\"ls $LS_OPTIONS -l\"
+	alias l=\"ls $LS_OPTIONS -lA\"
+						                      </code></pre>
+						                      <p>保存退出,重新登录后就可看到效果</p>
+						                    </blockquote>
+										
+											<li>配制vim高亮语法与默认编码：</li>
+											<pre><code>
+root@www.xdiary.win:~# 在当前家目录下添加或修改.vimrc
+root@www.xdiary.win:~# vim ~/.vimrc
+	syntax on
+	set number
+	set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+	set termencoding=utf-8
+	set encoding=utf-8	
+root@www.xdiary.win:~# 保存退出,如果还没有高亮语法的话,确认安装了vim-enhanced，再在/etc/profile末尾加入此句
+root@www.xdiary.win:~# vim /etc/profile
+	export TERM=xterm-color       #这样就可以高亮显示了
+											</code></pre>
+
+											<li>修改系统提示：</li>
+											<pre><code>
+root@www.xdiary.win:~# 修改hostname
+root@www.xdiary.win:~# vim /etc/hostname
+    ###修改为hotf###
+    hotf 
+root@www.xdiary.win:~# 记得要修改/etc/hosts,（因为不修改可能会导致解析错误等等）
+root@www.xdiary.win:~# vim /etc/hosts
+    ###记得要把127.0.1.1 这行中旧的hostname改为现在新的###
+    ###不然会出现解析错误等问题（如Nginx中不能正确识别网站的虚拟目录设置）
+    127.0.1.1    hotf
+root@www.xdiary.win:~# 重启之后以上两项修改正式生效
+root@hotf:~# vim ~/.bashrc
+	###把PS1这一行改成如下###
+	PS1='\[\e[31m\]\u\[\e[36m\]@\[\e[35m\]\h\[\e[32m\]:\[\e[34m\]\w\[\e[33m\]\$\[\e[m\] ' 
+root@hotf:~# 保存退出,重新登录生效
+											</code></pre>
+										</ol>
+
+									<h5>四、中文环境与中国时间</h5>
+									<blockquote>
+										<ol>
+											<li>查系统所支持的区域是否有中文：</li>
+											<pre><code>
+root@hotf:~# locale -a|grep zh
+zh_CN.gb18030
+zh_CN.gbk
+zh_CN.utf8
+root@hotf:~# 如果有以上zh_CN字样输出，证明已经支持中文了
+root@hotf:~# 如果没有任何输出，则需要重新安装中文语言包
+											</code></pre>
+
+											<li>安装必要的中文字体包：</li>
+											<pre><code>
+root@hotf:~# 安装ttf-arphic-uming scim-tables-zh im-switch xfonts-intl-chinese  fonts-noto  ttf-wqy-microhei 中其中一个字体包就可					
+root@hotf:~# apt-get install ttf-wqy-microhei
+											</code></pre>
+
+											<li>更新对应的locales文：</li>
+											<pre><code>
+root@hotf:~# dpkg-reconfigure locales
+root@hotf:~# 选择zh_CN.UTF-8安装
+											</code></pre>
+
+											<li>设置默认为中文UTF-8：</li>
+											<pre><code>
+root@hotf:~# vim /etc/default/locale 
+	###设置默认为中文UTF-8
+	LANG="zh_CN.UTF-8"  
+root@hotf:~# 保存退出     
+											</code></pre>
+
+											<li>修改时间时区：</li>
+											<pre><code>
+root@hotf:~# dpkg-reconfigure tzdata 
+root@hotf:~# 首先选择区：Asia(亚洲)
+root@hotf:~# 接着选择时地区：shanghai(上海)
+root@hotf:~# date
+2016年 12月 15日 星期四 00:38:09 CST
+root@hotf:~# 时间不对，同步时间
+root@hotf:~# apt-get install ntpdate
+root@hotf:~# ntpdate-debian
+15 Dec 16:42:10 ntpdate[5693]: step time server 210.23.25.77 offset 57601.167265 sec
+root@hotf:~# date
+2016年 12月 15日 星期四 16:42:15 CST
+root@hotf:~# 时间同步过来了
+
+											</code></pre>
+										</ol>
+									</blockquote>
+
+									<h5>五、安装必装软件</h5>
+										<ol>
+											<li>apt-get install vim rar unrar </li>
+											<li>apt-get install build-essential</li>
+											<li>apt-get install libtool cmake libncurses5-dev</li>
+										</ol>
+										<p>接下来安装自己所需要的服务就可，如LAMP,<a href="#">LNMP</a>,VPN等
+										<p>……</p>
+								
+							</section>
+					</div>
+				</div>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+						<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+						<li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; 版权ss所有: 随X记 </li><li>技术支持: <a href="http://elapse.date">临来笑笑生</a></li>
+					</ul>
+				</footer>
+
+	    </div>
+	    <!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+	</body>
+</html>
