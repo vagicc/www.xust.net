@@ -9,7 +9,7 @@ mod handlers;
 mod models;
 mod pager;
 mod routes;
-// mod schema;
+mod schema;
 mod template;
 
 #[tokio::main]
