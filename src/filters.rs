@@ -16,9 +16,10 @@ pub fn all_routes() -> impl warp::Filter<Extract = impl warp::Reply, Error = war
 
     // let demo = demo_redirect_r::index();
 
-    let routes = home.or(dir).or(favicon);
+    let article = crate::routes::article_route::list();
+
+    let routes = home.or(dir).or(favicon).or(article);
     // .or(article)
     // .or(demo);
     routes
 }
- 
